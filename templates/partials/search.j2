@@ -1,0 +1,16 @@
+
+<form action="/search">
+<label for="binomial">
+search by binomial
+</label>
+<input type="text" name="binomial" id="binomial" value="{{request.args.get('binomial')}}">
+<label for="max_length">
+filter by maximum length
+</label>
+<input type="number" name="max_length" id="max_length" min="0" value="{{request.args.get('max_length')}}">
+<label for="min_length">
+filter by minimum length
+</label>
+<input type ="number" name="min_length" id="min_length" min="0" value="{{request.args.get('min_length')}}">
+<button type="submit">search</button>
+</form>

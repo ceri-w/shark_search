@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<title>shark search</title>
+</head>
+<body>
+{% include "partials/search.j2" %}
+<a href="/">back</a>
+<h1>Shark search</h1>
+<p>{{matches|length}} matches found</p>
+<ul>
+{% for match in matches %}
+<h2>{{match["AcceptedBinomial"]}}</h2>
+<li>Genus: {{match["Genus"]}}</li>
+<li>Family: {{match["Family"]}}</li>
+<li>Order: {{match["Order"]}}</li>
+<li>Length: {{match["AvLength"]}}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
