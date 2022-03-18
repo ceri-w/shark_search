@@ -7,11 +7,11 @@
 {% include "partials/search.j2" %}
 <a href="/">back</a>
 <h1>Shark search</h1>
-<p>{{matches|length}} matches found</p>
+<p>Showing {{matches|length}}</p>
 <ul>
 {% for match in matches %}
 <h2>{{match["AcceptedBinomial"]}}</h2>
-<li>Common Name: {{match["CommonName"]}}</li>
+<li>Common name: {{match["common_names"][0]}}</li>
 <li>Genus: {{match["Genus"]}}</li>
 <li>Family: {{match["Family"]}}</li>
 <li>Order: {{match["Order"]}}</li>

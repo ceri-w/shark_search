@@ -4,12 +4,6 @@ from flask import Flask, render_template, request
 import requests 
 import json
 
-def get_page(url):
-    result = requests.get(url)
-    if result.status_code == 200:
-        return result.text
-    return None
-
 #import shark traits folder
 with open("sharks.json", "r") as sharks:
     sharks = json.load(sharks)
@@ -76,11 +70,6 @@ def get_common_name(species):
     
     return common_names
 
-#add common name to sharks
-for shark in sharks:
-    common_name = get_common_name(shark["AcceptedBinomial"])
-    shark["CommonName":common_name]
-
 app = Flask(__name__)
 
 #home page to search sharks list
@@ -110,4 +99,13 @@ def templating():
     matches = filter_by_min(matches, min_length)
     if json_format:
         return json.dumps(matches)
+
+    if len(matches) > 10:
+        matches = matches[0:10]
+
+    # For each match, get the common name
+
+    for shark in matches:
+        shark["common_names"] = get_common_name(shark["AcceptedBinomial"])
+
     return render_template("shark_search.j2", matches = matches)

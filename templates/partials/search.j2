@@ -2,7 +2,7 @@
 <label for="binomial">
 search by binomial
 </label>
-<input type="text" name="binomial" id="binomial" value="{{request.args.get('binomial')}}">
+<input type="text" name="binomial" id="binomial" value="{{request.args.get('binomial')|default("")}}">
 <label for="max_length">
 filter by maximum length
 </label>
