@@ -1,8 +1,16 @@
 #flask:framework that allows you to develop web applications
 #render_template:generate output from a template file based on the Jinja2
 from flask import Flask, render_template, request
-'''import shark traits folder'''
+import requests 
 import json
+
+def get_page(url):
+    result = requests.get(url)
+    if result.status_code == 200:
+        return result.text
+    return None
+
+#import shark traits folder
 with open("sharks.json", "r") as sharks:
     sharks = json.load(sharks)
 
@@ -38,6 +46,41 @@ def filter_by_min(shark_sp, min_length = False):
                 min_filter.append(shark)
         return min_filter
 
+#function to get species main common name from iucn red list API
+#load token
+with open("secrets.json", "r") as secrets:
+    secrets = json.load(secrets)
+
+def get_common_name(species):
+    binomial = species
+    url = "https://apiv3.iucnredlist.org/api/v3/species/" + binomial
+    r = requests.get(url, params={"token":secrets["red_list_token"]})
+    api_response = r.json()
+
+    # Make a list of common names we can append to
+    common_names = []
+
+    # Check if the result is valid
+
+    if "result" not in api_response:
+        return None
+
+    # Store the actual api response (this is an array of species matches)
+    result = api_response["result"]
+
+    # Loop over the results and add common names if set
+    for entry in result:
+        # Just checking in case the common name is not set or is empty
+        if "main_common_name" in entry and entry["main_common_name"]:
+            common_names.append(entry["main_common_name"])
+    
+    return common_names
+
+#add common name to sharks
+for shark in sharks:
+    common_name = get_common_name(shark["AcceptedBinomial"])
+    shark["CommonName":common_name]
+
 app = Flask(__name__)
 
 #home page to search sharks list
@@ -68,4 +111,3 @@ def templating():
     if json_format:
         return json.dumps(matches)
     return render_template("shark_search.j2", matches = matches)
-    
